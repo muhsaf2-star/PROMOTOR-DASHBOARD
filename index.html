@@ -1,3797 +1,1164 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
-
 <meta charset="UTF-8">
-<meta name="viewport"
-      content="width=device-width,initial-scale=1.0">
-
-<title>Samsung Promotor Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1428a0">
+<title>Samsung Dashboard</title>
 
 <style>
-
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
+:root {
+  --blue:#1428a0;
+  --blue-light:#e9edff;
+  --bg:#f4f6fa;
+  --white:#fff;
+  --text:#172033;
+  --muted:#70798c;
+  --border:#e3e8f0;
+  --green:#16834a;
+  --red:#e52c2c;
+  --orange:#df8218;
+  --radius:15px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Arial,Helvetica,sans-serif;color:var(--text)}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.topbar{height:76px;background:white;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:10}
+.brand{font-size:21px;font-weight:800;color:var(--blue);letter-spacing:-.5px}
+.userbox{display:flex;align-items:center;gap:14px;font-size:13px}
+.user-name{text-align:right;font-weight:700}
+.user-code{color:var(--muted);font-size:12px;margin-top:3px}
+.layout{display:flex;min-height:calc(100vh - 76px)}
+.sidebar{width:234px;background:#fff;border-right:1px solid var(--border);padding:16px 12px;flex-shrink:0}
+.navbtn{display:block;width:100%;text-align:left;border:0;background:transparent;color:#354052;padding:13px 14px;margin-bottom:7px;border-radius:11px;font-size:14px}
+.navbtn:hover,.navbtn.active{background:var(--blue-light);color:var(--blue);font-weight:700}
+.main{flex:1;min-width:0;padding:25px 24px 40px}
+.page-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+h1{font-size:25px;letter-spacing:-.6px;margin:0 0 5px}
+.subtitle{font-size:13px;color:var(--muted)}
+.toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+input,select{width:100%;min-height:44px;border:1px solid #d7deea;border-radius:10px;background:white;padding:10px 12px;color:var(--text);outline:none}
+input:focus,select:focus{border-color:var(--blue);box-shadow:0 0 0 3px #1428a015}
+.month-input{width:160px}
+.btn{border:1px solid var(--border);background:#fff;border-radius:10px;padding:11px 15px;font-weight:700;font-size:13px;color:var(--text)}
+.btn-primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.btn-primary:hover{background:#0e1d7b}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.metric-btn.active{background:var(--blue);border-color:var(--blue);color:white}
+.card{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:16px;min-width:0}
+.card-title{font-size:15px;font-weight:800;margin-bottom:6px}
+.card-subtitle{font-size:12px;color:var(--muted);margin-bottom:15px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:white;border:1px solid var(--border);border-radius:var(--radius);padding:17px}
+.kpi-label{font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
+.kpi-value{font-size:27px;letter-spacing:-.7px;font-weight:800;overflow-wrap:anywhere}
+.kpi-note{font-size:11px;color:var(--muted);margin-top:7px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.weekbox{border:1px solid var(--border);border-radius:12px;padding:14px}
+.weekname{font-size:12px;font-weight:800}
+.weekvalue{font-size:22px;font-weight:800;margin:8px 0}
+.weekdate{font-size:11px;color:var(--muted)}
+.table-wrap{overflow:auto;width:100%}
+table{border-collapse:collapse;width:100%;font-size:13px;min-width:500px}
+th{text-align:left;background:#f6f7fa;color:#70798c;font-size:11px;text-transform:uppercase;padding:13px 12px;white-space:nowrap}
+td{padding:13px 12px;border-top:1px solid #edf0f5}
+td:first-child{font-weight:700}
+.empty{text-align:center;padding:26px 12px;color:#8b95a7;font-size:13px}
+.good{color:var(--green);font-weight:800}
+.bad{color:var(--red);font-weight:800}
+.warn{color:var(--orange);font-weight:800}
+.focus-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.focus-item{border:1px solid var(--border);border-radius:12px;padding:15px}
+.focus-model{font-weight:800;margin:5px 0 12px}
+.progress{height:7px;border-radius:10px;background:#edf0f6;overflow:hidden;margin-top:10px}
+.progress>div{height:100%;background:var(--blue);border-radius:10px}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.field label{display:block;font-size:12px;font-weight:800;margin-bottom:8px}
+.field small{display:block;color:var(--muted);font-size:11px;margin-top:6px}
+.field-full{grid-column:1/-1}
+.store-lock{background:#f4f6fa;color:#626d80}
+.preview{background:#f6f7fb;border-radius:11px;padding:15px;font-size:13px;line-height:1.8}
+.preview strong{color:var(--blue)}
+.form-actions{display:flex;justify-content:flex-end;margin-top:16px}
+.notice{border-radius:10px;padding:12px 14px;font-size:13px;margin-bottom:14px}
+.notice.error{background:#fff0f0;color:#b42323}
+.notice.success{background:#eaf8ef;color:#176c3b}
+.login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:linear-gradient(145deg,#eef1ff,#f7f8fc)}
+.login-card{width:100%;max-width:420px;background:#fff;border:1px solid var(--border);border-radius:20px;padding:30px;box-shadow:0 18px 55px #18285a12}
+.login-card .brand{margin-bottom:12px}
+.login-card h1{font-size:25px;margin:20px 0 8px}
+.login-field{margin-top:16px}
+.login-field label{display:block;font-size:12px;font-weight:700;margin-bottom:8px}
+.login-card .btn{width:100%;margin-top:20px;min-height:46px}
+.login-help{font-size:12px;color:var(--muted);line-height:1.6;margin-top:16px}
+.loading{padding:35px;text-align:center;color:var(--muted);font-size:13px}
+.mobile-nav{display:none}
+#toast{position:fixed;bottom:24px;right:24px;max-width:calc(100% - 32px);background:#172033;color:white;padding:14px 18px;border-radius:12px;font-size:13px;box-shadow:0 8px 30px #0002;z-index:50}
+.section-label{font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:800;margin-bottom:12px}
+@media(max-width:900px){
+ .sidebar{width:190px}
+ .main{padding:20px 16px}
+ .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .kpi-value{font-size:24px}
+}
+@media(max-width:600px){
+ .topbar{height:64px;padding:0 15px}
+ .brand{font-size:17px}
+ .userbox{gap:9px}
+ .user-name{font-size:12px}
+ .user-code{font-size:10px}
+ .topbar .btn{padding:8px 10px;font-size:11px}
+ .layout{display:block;min-height:calc(100vh - 64px)}
+ .sidebar{display:none}
+ .main{padding:18px 12px 90px}
+ .page-head{align-items:flex-start;margin-bottom:17px}
+ h1{font-size:22px}
+ .toolbar{width:100%}
+ .month-input{flex:1;min-width:0;width:auto}
+ .card{padding:15px;margin-bottom:12px}
+ .kpis{gap:9px}
+ .kpi{padding:13px}
+ .kpi-label{font-size:10px}
+ .kpi-value{font-size:22px}
+ .kpi-note{font-size:10px}
+ .grid3{grid-template-columns:1fr}
+ .weekbox{padding:12px}
+ .focus-list{grid-template-columns:1fr}
+ .form-grid{grid-template-columns:1fr;gap:13px}
+ .field-full{grid-column:auto}
+ .mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);z-index:20;padding:7px 4px calc(7px + env(safe-area-inset-bottom));justify-content:space-around}
+ .mobile-nav button{border:0;background:transparent;color:#727b8e;font-size:10px;padding:7px 4px;flex:1;border-radius:9px}
+ .mobile-nav button.active{color:var(--blue);background:var(--blue-light);font-weight:800}
+ .mobile-nav span{display:block;font-size:17px;margin-bottom:4px}
+ .form-actions .btn{width:100%}
+ #toast{bottom:80px;right:12px}
 }
-
-body{
-  font-family:Arial,Helvetica,sans-serif;
-  background:#f5f7fa;
-  color:#111827;
-}
-
-button,
-input,
-select{
-  font:inherit;
-}
-
-button{
-  cursor:pointer;
-}
-
-.hidden{
-  display:none!important;
-}
-
-/* =========================
-   LOGIN
-========================= */
-
-#loginPage{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  background:
-    linear-gradient(
-      135deg,
-      #061b5c,
-      #0b4dcc
-    );
-}
-
-.loginBox{
-  width:100%;
-  max-width:390px;
-  background:white;
-  border-radius:22px;
-  padding:32px 26px;
-  box-shadow:0 20px 60px rgba(0,0,0,.25);
-}
-
-.logo{
-  font-size:28px;
-  font-weight:800;
-  color:#1428a0;
-  margin-bottom:8px;
-}
-
-.loginTitle{
-  font-size:24px;
-  font-weight:700;
-  margin-bottom:6px;
-}
-
-.loginSub{
-  font-size:13px;
-  color:#6b7280;
-  margin-bottom:26px;
-}
-
-.field{
-  margin-bottom:15px;
-}
-
-.field label{
-  display:block;
-  font-size:12px;
-  font-weight:700;
-  margin-bottom:7px;
-  color:#374151;
-}
-
-.field input,
-.field select{
-  width:100%;
-  border:1px solid #d9dee7;
-  border-radius:10px;
-  padding:12px 13px;
-  outline:none;
-  background:#fff;
-}
-
-.field input:focus,
-.field select:focus{
-  border-color:#1428a0;
-  box-shadow:0 0 0 3px rgba(20,40,160,.08);
-}
-
-.primaryBtn{
-  width:100%;
-  border:0;
-  background:#1428a0;
-  color:white;
-  border-radius:11px;
-  padding:13px;
-  font-weight:700;
-}
-
-.primaryBtn:hover{
-  background:#0d1d80;
-}
-
-.error{
-  color:#dc2626;
-  font-size:12px;
-  margin-top:10px;
-}
-
-/* =========================
-   APP
-========================= */
-
-#app{
-  min-height:100vh;
-}
-
-.topbar{
-  height:66px;
-  background:white;
-  border-bottom:1px solid #e5e7eb;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 24px;
-  position:sticky;
-  top:0;
-  z-index:20;
-}
-
-.brand{
-  font-weight:800;
-  font-size:18px;
-  color:#1428a0;
-}
-
-.userInfo{
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
-
-.userText{
-  text-align:right;
-}
-
-.userName{
-  font-size:13px;
-  font-weight:700;
-}
-
-.userStore{
-  font-size:11px;
-  color:#6b7280;
-}
-
-.logoutBtn{
-  border:1px solid #e5e7eb;
-  background:white;
-  border-radius:9px;
-  padding:8px 12px;
-  font-size:12px;
-}
-
-/* =========================
-   LAYOUT
-========================= */
-
-.layout{
-  display:flex;
-}
-
-.sidebar{
-  width:220px;
-  background:white;
-  border-right:1px solid #e5e7eb;
-  min-height:calc(100vh - 66px);
-  padding:18px 12px;
-  position:fixed;
-  left:0;
-  top:66px;
-  bottom:0;
-}
-
-.navBtn{
-  width:100%;
-  border:0;
-  background:white;
-  text-align:left;
-  padding:11px 13px;
-  border-radius:9px;
-  margin-bottom:4px;
-  font-size:13px;
-  color:#374151;
-}
-
-.navBtn:hover{
-  background:#f2f5ff;
-}
-
-.navBtn.active{
-  background:#e9edff;
-  color:#1428a0;
-  font-weight:700;
-}
-
-.main{
-  margin-left:220px;
-  width:calc(100% - 220px);
-  padding:22px;
-}
-
-.page{
-  max-width:1400px;
-  margin:auto;
-}
-
-.pageTitle{
-  font-size:22px;
-  font-weight:800;
-  margin-bottom:4px;
-}
-
-.pageSub{
-  color:#6b7280;
-  font-size:12px;
-  margin-bottom:20px;
-}
-
-/* =========================
-   TOOLBAR
-========================= */
-
-.toolbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  margin-bottom:18px;
-  flex-wrap:wrap;
-}
-
-.toolbarLeft,
-.toolbarRight{
-  display:flex;
-  gap:8px;
-  align-items:center;
-  flex-wrap:wrap;
-}
-
-.monthInput,
-.selectInput{
-  border:1px solid #d9dee7;
-  background:white;
-  border-radius:9px;
-  padding:9px 11px;
-  font-size:12px;
-}
-
-.metricBtn{
-  border:1px solid #d9dee7;
-  background:white;
-  padding:9px 13px;
-  border-radius:9px;
-  font-size:12px;
-  font-weight:700;
-}
-
-.metricBtn.active{
-  background:#1428a0;
-  color:white;
-  border-color:#1428a0;
-}
-
-/* =========================
-   CARD
-========================= */
-
-.card{
-  background:white;
-  border:1px solid #e7eaf0;
-  border-radius:14px;
-  padding:17px;
-  margin-bottom:16px;
-}
-
-.cardTitle{
-  font-size:14px;
-  font-weight:800;
-  margin-bottom:4px;
-}
-
-.cardSub{
-  font-size:11px;
-  color:#6b7280;
-  margin-bottom:13px;
-}
-
-/* =========================
-   FOCUS
-========================= */
-
-.focusGrid{
-  display:grid;
-  grid-template-columns:
-    repeat(auto-fit,minmax(220px,1fr));
-  gap:10px;
-}
-
-.focusCard{
-  border:1px solid #dfe5ff;
-  background:#f8f9ff;
-  border-radius:12px;
-  padding:14px;
-}
-
-.focusPriority{
-  font-size:10px;
-  font-weight:800;
-  color:#1428a0;
-  margin-bottom:7px;
-}
-
-.focusModel{
-  font-size:16px;
-  font-weight:800;
-  margin-bottom:3px;
-}
-
-.focusType{
-  font-size:11px;
-  color:#6b7280;
-  margin-bottom:12px;
-}
-
-.focusNumbers{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-}
-
-.smallLabel{
-  font-size:10px;
-  color:#6b7280;
-}
-
-.smallValue{
-  font-size:13px;
-  font-weight:800;
-  margin-top:2px;
-}
-
-/* =========================
-   KPI
-========================= */
-
-.kpiGrid{
-  display:grid;
-  grid-template-columns:
-    repeat(4,1fr);
-  gap:12px;
-  margin-bottom:16px;
-}
-
-.kpi{
-  background:white;
-  border:1px solid #e7eaf0;
-  border-radius:14px;
-  padding:16px;
-}
-
-.kpiLabel{
-  color:#6b7280;
-  font-size:11px;
-  margin-bottom:8px;
-}
-
-.kpiValue{
-  font-size:24px;
-  font-weight:800;
-}
-
-.kpiTarget{
-  color:#6b7280;
-  font-size:10px;
-  margin-top:5px;
-}
-
-/* =========================
-   WEEK
-========================= */
-
-.weekGrid{
-  display:grid;
-  grid-template-columns:
-    repeat(3,1fr);
-  gap:10px;
-}
-
-.weekCard{
-  border:1px solid #e7eaf0;
-  border-radius:11px;
-  padding:13px;
-}
-
-.weekTitle{
-  font-size:12px;
-  font-weight:800;
-  margin-bottom:8px;
-}
-
-.weekValue{
-  font-size:20px;
-  font-weight:800;
-}
-
-.weekDate{
-  font-size:10px;
-  color:#6b7280;
-  margin-top:4px;
-}
-
-/* =========================
-   TABLE
-========================= */
-
-.tableWrap{
-  overflow:auto;
-}
-
-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:650px;
-}
-
-th{
-  background:#f8f9fb;
-  text-align:left;
-  font-size:11px;
-  color:#6b7280;
-  padding:11px;
-  border-bottom:1px solid #e5e7eb;
-}
-
-td{
-  padding:11px;
-  font-size:12px;
-  border-bottom:1px solid #f0f1f3;
-}
-
-.badge{
-  display:inline-block;
-  padding:4px 8px;
-  border-radius:20px;
-  font-size:10px;
-  font-weight:700;
-  background:#eef2ff;
-  color:#1428a0;
-}
-
-.achGreen{
-  color:#16a34a;
-  font-weight:800;
-}
-
-.achOrange{
-  color:#ea580c;
-  font-weight:800;
-}
-
-.achRed{
-  color:#dc2626;
-  font-weight:800;
-}
-
-/* =========================
-   FORM
-========================= */
-
-.formGrid{
-  display:grid;
-  grid-template-columns:
-    repeat(2,1fr);
-  gap:13px;
-}
-
-.formActions{
-  margin-top:15px;
-  display:flex;
-  justify-content:flex-end;
-}
-
-.saveBtn{
-  border:0;
-  background:#1428a0;
-  color:white;
-  border-radius:9px;
-  padding:11px 18px;
-  font-weight:700;
-}
-
-.readonlyBox{
-  background:#f5f6f8!important;
-  color:#6b7280;
-}
-
-.preview{
-  margin-top:12px;
-  padding:13px;
-  background:#f7f8fc;
-  border-radius:10px;
-  font-size:12px;
-}
-
-.preview strong{
-  color:#1428a0;
-}
-
-/* =========================
-   EMPTY / LOADING
-========================= */
-
-.empty{
-  text-align:center;
-  padding:35px;
-  color:#9ca3af;
-  font-size:12px;
-}
-
-.loading{
-  text-align:center;
-  padding:30px;
-  color:#6b7280;
-  font-size:12px;
-}
-
-/* =========================
-   MOBILE NAV
-========================= */
-
-.mobileNav{
-  display:none;
-}
-
-/* =========================
-   MOBILE
-========================= */
-
-@media(max-width:800px){
-
-  .topbar{
-    height:60px;
-    padding:0 14px;
-  }
-
-  .brand{
-    font-size:15px;
-  }
-
-  .userInfo{
-    gap:7px;
-  }
-
-  .userText{
-    display:none;
-  }
-
-  .logoutBtn{
-    padding:7px 9px;
-    font-size:10px;
-  }
-
-  .sidebar{
-    display:none;
-  }
-
-  .main{
-    margin-left:0;
-    width:100%;
-    padding:14px 12px 85px;
-  }
-
-  .pageTitle{
-    font-size:18px;
-  }
-
-  .kpiGrid{
-    grid-template-columns:
-      repeat(2,1fr);
-    gap:8px;
-  }
-
-  .kpi{
-    padding:13px;
-  }
-
-  .kpiValue{
-    font-size:20px;
-  }
-
-  .weekGrid{
-    grid-template-columns:1fr;
-  }
-
-  .formGrid{
-    grid-template-columns:1fr;
-  }
-
-  .toolbar{
-    align-items:stretch;
-  }
-
-  .toolbarLeft,
-  .toolbarRight{
-    width:100%;
-  }
-
-  .monthInput,
-  .selectInput{
-    flex:1;
-  }
-
-  .metricBtn{
-    flex:1;
-  }
-
-  .mobileNav{
-    display:flex;
-    position:fixed;
-    bottom:0;
-    left:0;
-    right:0;
-    height:66px;
-    background:white;
-    border-top:1px solid #e5e7eb;
-    z-index:50;
-    justify-content:space-around;
-    padding:5px;
-  }
-
-  .mobileNav button{
-    border:0;
-    background:white;
-    color:#6b7280;
-    font-size:10px;
-    flex:1;
-  }
-
-  .mobileNav button.active{
-    color:#1428a0;
-    font-weight:800;
-  }
-}
-
 </style>
 </head>
 
 <body>
 
-<!-- =================================================
-     LOGIN
-================================================== -->
-
-<div id="loginPage">
-
-  <div class="loginBox">
-
-    <div class="logo">
-      SAMSUNG
-    </div>
-
-    <div class="loginTitle">
-      Promotor Dashboard
-    </div>
-
-    <div class="loginSub">
-      Login menggunakan akun Store
-    </div>
-
-    <div class="field">
-
-      <label>
-        USER ID
-      </label>
-
-      <input
-        id="loginUser"
-        type="text"
-        autocomplete="username"
-        placeholder="Masukkan User ID">
-
-    </div>
-
-    <div class="field">
-
-      <label>
-        PASSWORD
-      </label>
-
-      <input
-        id="loginPassword"
-        type="password"
-        autocomplete="current-password"
-        placeholder="Masukkan password">
-
-    </div>
-
-    <button
-      class="primaryBtn"
-      onclick="login()">
-
-      LOGIN
-
-    </button>
-
-    <div
-      id="loginError"
-      class="error">
-    </div>
-
+<div id="loginScreen" class="login-screen">
+  <div class="login-card">
+    <div class="brand">SAMSUNG DASHBOARD</div>
+    <div class="subtitle">Store Sales Performance</div>
+    <h1>Login</h1>
+    <div class="subtitle">Masuk menggunakan akun store atau akun pengelola.</div>
+    <form id="loginForm">
+      <div class="login-field">
+        <label for="loginUser">USER ID</label>
+        <input id="loginUser" autocomplete="username" required placeholder="Masukkan User ID">
+      </div>
+      <div class="login-field">
+        <label for="loginPassword">PASSWORD</label>
+        <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Masukkan password">
+      </div>
+      <div id="loginError" class="notice error hidden"></div>
+      <button id="loginButton" class="btn btn-primary" type="submit">LOGIN</button>
+    </form>
+    <div class="login-help">Akses data dibatasi sesuai role dan store pada USER_ACCESS.</div>
   </div>
-
 </div>
 
-
-<!-- =================================================
-     APP
-================================================== -->
-
-<div
-  id="app"
-  class="hidden">
-
+<div id="appScreen" class="hidden">
   <header class="topbar">
-
-    <div class="brand">
-      SAMSUNG DASHBOARD
-    </div>
-
-    <div class="userInfo">
-
-      <div class="userText">
-
-        <div
-          id="userName"
-          class="userName">
-        </div>
-
-        <div
-          id="userStore"
-          class="userStore">
-        </div>
-
+    <div class="brand">SAMSUNG DASHBOARD</div>
+    <div class="userbox">
+      <div>
+        <div class="user-name" id="topUserName">Store</div>
+        <div class="user-code" id="topUserCode">-</div>
       </div>
-
-      <button
-        class="logoutBtn"
-        onclick="logout()">
-
-        Logout
-
-      </button>
-
+      <button class="btn" id="logoutButton">Logout</button>
     </div>
-
   </header>
 
-
   <div class="layout">
-
-    <aside
-      id="sidebar"
-      class="sidebar">
-
-      <button
-        class="navBtn active"
-        data-page="overview"
-        onclick="showPage('overview')">
-
-        Overview
-
-      </button>
-
-      <button
-        class="navBtn"
-        data-page="performance"
-        onclick="showPage('performance')">
-
-        Performance
-
-      </button>
-
-      <button
-        class="navBtn"
-        data-page="input"
-        onclick="showPage('input')">
-
-        Input Sales
-
-      </button>
-
-      <button
-        class="navBtn"
-        data-page="focus"
-        onclick="showPage('focus')">
-
-        Focus Product
-
-      </button>
-
-      <button
-        class="navBtn managerOnly"
-        data-page="product"
-        onclick="showPage('product')">
-
-        Product
-
-      </button>
-
-      <button
-        class="navBtn managerOnly"
-        data-page="target"
-        onclick="showPage('target')">
-
-        Target
-
-      </button>
-
-      <button
-        class="navBtn managerOnly"
-        data-page="master"
-        onclick="showPage('master')">
-
-        Master
-
-      </button>
-
-    </aside>
-
-
+    <aside class="sidebar" id="sidebar"></aside>
     <main class="main">
-
-      <!-- OVERVIEW -->
-
-      <section
-        id="page-overview"
-        class="page">
-
-        <div class="toolbar">
-
-          <div>
-
-            <div class="pageTitle">
-              Overview
-            </div>
-
-            <div class="pageSub">
-              Performance store bulan berjalan
-            </div>
-
-          </div>
-
-          <div class="toolbarRight">
-
-            <input
-              id="overviewMonth"
-              class="monthInput"
-              type="month"
-              onchange="loadOverview()">
-
-            <button
-              id="qtyBtn"
-              class="metricBtn active"
-              onclick="setMetric('QTY')">
-
-              QTY
-
-            </button>
-
-            <button
-              id="valueBtn"
-              class="metricBtn"
-              onclick="setMetric('VALUE')">
-
-              VALUE
-
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <div
-          id="focusOverview"
-          class="card">
-
-        </div>
-
-
-        <div
-          id="overviewKpi"
-          class="kpiGrid">
-
-        </div>
-
-
-        <div class="card">
-
-          <div class="cardTitle">
-            Last 3 Weeks
-          </div>
-
-          <div class="cardSub">
-            Pergerakan penjualan
-          </div>
-
-          <div
-            id="weekOverview"
-            class="weekGrid">
-
-          </div>
-
-        </div>
-
-
-        <div class="card">
-
-          <div class="cardTitle">
-            Performance by Series
-          </div>
-
-          <div class="cardSub">
-            Achievement per series
-          </div>
-
-          <div
-            id="seriesOverview"
-            class="tableWrap">
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- PERFORMANCE -->
-
-      <section
-        id="page-performance"
-        class="page hidden">
-
-        <div class="toolbar">
-
-          <div>
-
-            <div class="pageTitle">
-              Performance
-            </div>
-
-            <div class="pageSub">
-              Performance berdasarkan store
-            </div>
-
-          </div>
-
-          <div class="toolbarRight">
-
-            <input
-              id="performanceMonth"
-              class="monthInput"
-              type="month"
-              onchange="loadPerformance()">
-
-            <button
-              id="perfQtyBtn"
-              class="metricBtn active"
-              onclick="setPerformanceMetric('QTY')">
-
-              QTY
-
-            </button>
-
-            <button
-              id="perfValueBtn"
-              class="metricBtn"
-              onclick="setPerformanceMetric('VALUE')">
-
-              VALUE
-
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <div class="card">
-
-          <div
-            id="performanceTable"
-            class="tableWrap">
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- INPUT -->
-
-      <section
-        id="page-input"
-        class="page hidden">
-
-        <div class="pageTitle">
-          Input Sales
-        </div>
-
-        <div class="pageSub">
-          Input transaksi berdasarkan QTY. Value otomatis dari Product Master.
-        </div>
-
-
-        <div class="card">
-
-          <div class="cardTitle">
-            Store
-          </div>
-
-          <div class="cardSub">
-            Store otomatis mengikuti akun login.
-          </div>
-
-          <div class="field">
-
-            <input
-              id="inputStore"
-              class="readonlyBox"
-              readonly>
-
-          </div>
-
-        </div>
-
-
-        <div class="card">
-
-          <div class="formGrid">
-
-            <div class="field">
-
-              <label>
-                TANGGAL
-              </label>
-
-              <input
-                id="salesDate"
-                type="date">
-
-            </div>
-
-
-            <div class="field">
-
-              <label>
-                TYPE / SERIES
-              </label>
-
-              <select
-                id="salesType"
-                onchange="loadInputProducts()">
-
-                <option value="">
-                  Pilih Type
-                </option>
-
-              </select>
-
-            </div>
-
-
-            <div class="field">
-
-              <label>
-                PRODUCT
-              </label>
-
-              <select
-                id="salesProduct"
-                onchange="updateSalesPreview()">
-
-                <option value="">
-                  Pilih Product
-                </option>
-
-              </select>
-
-            </div>
-
-
-            <div class="field">
-
-              <label>
-                QTY
-              </label>
-
-              <input
-                id="salesQty"
-                type="number"
-                min="1"
-                step="1"
-                placeholder="Masukkan QTY"
-                oninput="updateSalesPreview()">
-
-            </div>
-
-          </div>
-
-
-          <div
-            id="salesPreview"
-            class="preview">
-
-            Pilih product dan QTY.
-
-          </div>
-
-
-          <div class="formActions">
-
-            <button
-              class="saveBtn"
-              onclick="saveSales()">
-
-              SIMPAN SALES
-
-            </button>
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- FOCUS -->
-
-      <section
-        id="page-focus"
-        class="page hidden">
-
-        <div class="toolbar">
-
-          <div>
-
-            <div class="pageTitle">
-              Focus Product
-            </div>
-
-            <div class="pageSub">
-              Product fokus bulan berjalan
-            </div>
-
-          </div>
-
-          <input
-            id="focusMonth"
-            class="monthInput"
-            type="month"
-            onchange="loadFocus()">
-
-        </div>
-
-
-        <div
-          id="focusList">
-
-        </div>
-
-
-        <div
-          class="card managerOnly">
-
-          <div class="cardTitle">
-            Tambah Focus Product
-          </div>
-
-          <div class="cardSub">
-            Hanya Leader / TSH / Admin
-          </div>
-
-          <div class="formGrid">
-
-            <div class="field">
-
-              <label>
-                BULAN
-              </label>
-
-              <input
-                id="focusInputMonth"
-                type="month">
-
-            </div>
-
-            <div class="field">
-
-              <label>
-                TYPE
-              </label>
-
-              <select
-                id="focusType"
-                onchange="loadFocusProductsForm()">
-              </select>
-
-            </div>
-
-            <div class="field">
-
-              <label>
-                PRODUCT
-              </label>
-
-              <select
-                id="focusModel">
-              </select>
-
-            </div>
-
-            <div class="field">
-
-              <label>
-                TARGET
-              </label>
-
-              <input
-                id="focusTarget"
-                type="number"
-                min="0">
-
-            </div>
-
-            <div class="field">
-
-              <label>
-                PRIORITY
-              </label>
-
-              <select id="focusPriority">
-
-                <option value="HIGH">
-                  HIGH
-                </option>
-
-                <option value="MEDIUM">
-                  MEDIUM
-                </option>
-
-                <option value="NORMAL">
-                  NORMAL
-                </option>
-
-              </select>
-
-            </div>
-
-          </div>
-
-          <div class="formActions">
-
-            <button
-              class="saveBtn"
-              onclick="saveFocus()">
-
-              SIMPAN FOCUS
-
-            </button>
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- PRODUCT -->
-
-      <section
-        id="page-product"
-        class="page hidden">
-
-        <div class="pageTitle">
-          Product Master
-        </div>
-
-        <div class="pageSub">
-          Harga/unit digunakan otomatis untuk menghitung VALUE sales.
-        </div>
-
-
-        <div class="card">
-
-          <div class="formGrid">
-
-            <div class="field">
-
-              <label>
-                TYPE
-              </label>
-
-              <select
-                id="productType">
-              </select>
-
-            </div>
-
-            <div class="field">
-
-              <label>
-                MODEL
-              </label>
-
-              <input
-                id="productModel"
-                placeholder="Contoh: Galaxy S26 Ultra">
-
-            </div>
-
-            <div class="field">
-
-              <label>
-                VALUE / HARGA
-              </label>
-
-              <input
-                id="productValue"
-                type="number"
-                min="0"
-                placeholder="Contoh: 19999000">
-
-            </div>
-
-          </div>
-
-          <div class="formActions">
-
-            <button
-              class="saveBtn"
-              onclick="saveProduct()">
-
-              TAMBAH PRODUCT
-
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <div class="card">
-
-          <div
-            id="productTable"
-            class="tableWrap">
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- TARGET -->
-
-      <section
-        id="page-target"
-        class="page hidden">
-
-        <div class="pageTitle">
-          Target Management
-        </div>
-
-        <div class="pageSub">
-          System Target dan Adjust Target.
-        </div>
-
-
-        <div class="card">
-
-          <div class="formGrid">
-
-            <div class="field">
-
-              <label>
-                BULAN
-              </label>
-
-              <input
-                id="targetMonth"
-                type="month">
-
-            </div>
-
-            <div class="field">
-
-              <label>
-                STORE
-              </label>
-
-              <select
-                id="targetStore">
-              </select>
-
-            </div>
-
-            <div class="field">
-
-              <label>
-                TYPE
-              </label>
-
-              <select
-                id="targetType">
-              </select>
-
-            </div>
-
-            <div class="field">
-
-              <label>
-                MODEL
-              </label>
-
-              <input
-                id="targetModel"
-                placeholder="Opsional">
-
-            </div>
-
-            <div class="field">
-
-              <label>
-                SYSTEM TARGET
-              </label>
-
-              <input
-                id="systemTarget"
-                type="number"
-                min="0">
-
-            </div>
-
-            <div class="field">
-
-              <label>
-                ADJUST TARGET
-              </label>
-
-              <input
-                id="adjustTarget"
-                type="number"
-                min="0">
-
-            </div>
-
-          </div>
-
-          <div class="formActions">
-
-            <button
-              class="saveBtn"
-              onclick="saveTarget()">
-
-              SIMPAN TARGET
-
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <div class="card">
-
-          <div
-            id="targetTable"
-            class="tableWrap">
-
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- MASTER -->
-
-      <section
-        id="page-master"
-        class="page hidden">
-
-        <div class="pageTitle">
-          Master
-        </div>
-
-        <div class="pageSub">
-          Pengaturan Type / Series.
-        </div>
-
-
-        <div class="card">
-
-          <div class="cardTitle">
-            Tambah Type / Series
-          </div>
-
-          <div class="formGrid">
-
-            <div class="field">
-
-              <label>
-                TYPE NAME
-              </label>
-
-              <input
-                id="newTypeName"
-                placeholder="Contoh: Watch">
-
-            </div>
-
-          </div>
-
-          <div class="formActions">
-
-            <button
-              class="saveBtn"
-              onclick="saveType()">
-
-              TAMBAH TYPE
-
-            </button>
-
-          </div>
-
-        </div>
-
-
-        <div class="card">
-
-          <div
-            id="typeTable"
-            class="tableWrap">
-
-          </div>
-
-        </div>
-
-      </section>
-
+      <div id="toast" class="hidden"></div>
+      <div id="pageContent"><div class="loading">Memuat dashboard...</div></div>
     </main>
-
   </div>
-
-
-  <!-- MOBILE NAV -->
-
-  <nav class="mobileNav">
-
-    <button
-      data-mobile="overview"
-      class="active"
-      onclick="showPage('overview')">
-
-      🏠<br>
-      Home
-
-    </button>
-
-    <button
-      data-mobile="performance"
-      onclick="showPage('performance')">
-
-      📊<br>
-      Performance
-
-    </button>
-
-    <button
-      data-mobile="input"
-      onclick="showPage('input')">
-
-      ＋<br>
-      Input
-
-    </button>
-
-    <button
-      data-mobile="focus"
-      onclick="showPage('focus')">
-
-      ⭐<br>
-      Focus
-
-    </button>
-
-  </nav>
-
+  <nav id="mobileNav" class="mobile-nav"></nav>
 </div>
 
-
 <script>
+'use strict';
 
-/* =================================================
+/* ======================================================
    CONFIG
-================================================= */
+====================================================== */
 
 const API_URL =
   'https://script.google.com/macros/s/AKfycbwQkb38EnhSq-VAHv2VpjuUpKLxE7ySOXM3aDKd4bPVXE2DvGS2Iqi3Ldv4LpNv3PkG/exec';
 
+const state = {
+  token: '',
+  user: null,
+  page: 'overview',
+  month: getCurrentMonth(),
+  metric: 'QTY',
+  types: [],
+  products: [],
+  stores: [],
+  focus: [],
+  targets: [],
+  overview: null,
+  performance: null
+};
 
-let token =
-  localStorage.getItem(
-    'samsung_dashboard_token'
-  ) || '';
+function getCurrentMonth() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+}
 
-let currentUser =
-  JSON.parse(
-    localStorage.getItem(
-      'samsung_dashboard_user'
-    ) || 'null'
-  );
+function todayString() {
+  const d = new Date();
+  return d.getFullYear() + '-' +
+    String(d.getMonth() + 1).padStart(2, '0') + '-' +
+    String(d.getDate()).padStart(2, '0');
+}
 
-let metric = 'QTY';
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#39;'
+  }[ch]));
+}
 
-let performanceMetric = 'QTY';
+function numberValue(value) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : 0;
+}
 
-let types = [];
+function money(value) {
+  const n = numberValue(value);
+  if (Math.abs(n) >= 1000000) {
+    const v = n / 1000000;
+    return v.toLocaleString('id-ID', {
+      maximumFractionDigits: 1,
+      minimumFractionDigits: 0
+    }) + 'jt';
+  }
+  return n.toLocaleString('id-ID', {maximumFractionDigits:0});
+}
 
-let products = [];
+function integer(value) {
+  return numberValue(value).toLocaleString('id-ID', {
+    maximumFractionDigits: 2
+  });
+}
 
-let stores = [];
+function metricFormat(value) {
+  return state.metric === 'VALUE' ? money(value) : integer(value);
+}
+
+function pct(value) {
+  return numberValue(value).toLocaleString('id-ID', {
+    maximumFractionDigits: 1
+  }) + '%';
+}
+
+function achievementClass(value) {
+  const n = numberValue(value);
+  if (n >= 100) return 'good';
+  if (n >= 90) return 'warn';
+  return 'bad';
+}
+
+function monthLabel(month) {
+  if (!month) return '-';
+  const parts = month.split('-').map(Number);
+  if (parts.length !== 2 || !parts[0] || !parts[1]) return month;
+  return new Date(parts[0], parts[1] - 1, 1)
+    .toLocaleDateString('id-ID', {month:'long',year:'numeric'});
+}
+
+function showToast(message, isError = false) {
+  const el = document.getElementById('toast');
+  el.textContent = message;
+  el.style.background = isError ? '#a82323' : '#172033';
+  el.classList.remove('hidden');
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => el.classList.add('hidden'), 3500);
+}
+
+function showError(containerId, message) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.textContent = message;
+  el.classList.remove('hidden');
+}
+
+function hideError(containerId) {
+  const el = document.getElementById(containerId);
+  if (el) el.classList.add('hidden');
+}
 
 
-/* =================================================
+/* ======================================================
    API
-================================================= */
+====================================================== */
 
-async function api(
-  action,
-  data = {}
-){
+async function api(action, data = {}, authenticated = true) {
+  const params = new URLSearchParams();
+  params.set('action', action);
 
-  const params =
-    new URLSearchParams();
+  Object.entries(data).forEach(([key, value]) => {
+    if (value !== undefined && value !== null) {
+      params.set(key, String(value));
+    }
+  });
 
-  params.append(
-    'action',
-    action
-  );
-
-  Object.keys(data)
-    .forEach(key => {
-
-      if (
-        data[key] !== undefined &&
-        data[key] !== null
-      ){
-
-        params.append(
-          key,
-          data[key]
-        );
-      }
-
-    });
-
-  if(token){
-
-    params.append(
-      'token',
-      token
-    );
+  if (authenticated && state.token) {
+    params.set('token', state.token);
   }
 
-  const url =
-    API_URL +
-    '?' +
-    params.toString();
+  const response = await fetch(API_URL + '?' + params.toString(), {
+    method: 'GET',
+    cache: 'no-store',
+    redirect: 'follow'
+  });
 
-  const response =
-    await fetch(
-      url,
-      {
-        method:'GET',
-        cache:'no-store'
-      }
-    );
-
-  if(!response.ok){
-
-    throw new Error(
-      'Server error ' +
-      response.status
-    );
+  if (!response.ok) {
+    throw new Error('Server error: ' + response.status);
   }
 
-  const result =
-    await response.json();
+  let result;
+  try {
+    result = await response.json();
+  } catch (_) {
+    throw new Error('Respons API bukan JSON. Periksa deployment Apps Script.');
+  }
 
-  if(
-    result.success === false
-  ){
-
-    throw new Error(
-      result.message ||
-      'Terjadi kesalahan.'
-    );
+  if (result.success === false) {
+    throw new Error(result.message || 'Permintaan gagal.');
   }
 
   return result;
 }
 
 
-/* =================================================
-   INIT
-================================================= */
+/* ======================================================
+   LOGIN / LOGOUT
+====================================================== */
 
-document.addEventListener(
-  'DOMContentLoaded',
-  () => {
+document.getElementById('loginForm').addEventListener('submit', async event => {
+  event.preventDefault();
 
-    const now =
-      new Date();
+  const button = document.getElementById('loginButton');
+  button.disabled = true;
+  button.textContent = 'LOGIN...';
+  hideError('loginError');
 
-    const month =
-      now.toISOString()
-        .slice(0,7);
+  try {
+    const userId = document.getElementById('loginUser').value.trim();
+    const password = document.getElementById('loginPassword').value;
 
-    document
-      .getElementById(
-        'overviewMonth'
-      ).value = month;
+    const result = await api('login', {userId, password}, false);
 
-    document
-      .getElementById(
-        'performanceMonth'
-      ).value = month;
+    state.token = result.token;
+    state.user = result.user;
+    state.page = 'overview';
+    state.month = getCurrentMonth();
+    state.metric = 'QTY';
 
-    document
-      .getElementById(
-        'focusMonth'
-      ).value = month;
-
-    document
-      .getElementById(
-        'focusInputMonth'
-      ).value = month;
-
-    document
-      .getElementById(
-        'targetMonth'
-      ).value = month;
-
-    document
-      .getElementById(
-        'salesDate'
-      ).value =
-      new Date()
-        .toISOString()
-        .slice(0,10);
-
-    if(currentUser && token){
-
-      openApp();
-
-    }
-
-  }
-);
-
-
-/* =================================================
-   LOGIN
-================================================= */
-
-async function login(){
-
-  const userId =
-    document
-      .getElementById(
-        'loginUser'
-      )
-      .value
-      .trim();
-
-  const password =
-    document
-      .getElementById(
-        'loginPassword'
-      )
-      .value
-      .trim();
-
-  const error =
-    document
-      .getElementById(
-        'loginError'
-      );
-
-  error.textContent = '';
-
-  if(!userId || !password){
-
-    error.textContent =
-      'User ID dan password wajib diisi.';
-
-    return;
-  }
-
-  const btn =
-    document
-      .querySelector(
-        '#loginPage .primaryBtn'
-      );
-
-  btn.disabled = true;
-  btn.textContent = 'LOGIN...';
-
-  try{
-
-    const result =
-      await api(
-        'login',
-        {
-          userId:userId,
-          password:password
-        }
-      );
-
-    token =
-      result.token;
-
-    currentUser =
-      result.user;
-
-    localStorage.setItem(
-      'samsung_dashboard_token',
-      token
-    );
-
-    localStorage.setItem(
-      'samsung_dashboard_user',
-      JSON.stringify(
-        currentUser
-      )
-    );
-
+    document.getElementById('loginPassword').value = '';
     openApp();
-
-  }catch(err){
-
-    error.textContent =
-      err.message;
-
-  }finally{
-
-    btn.disabled = false;
-    btn.textContent = 'LOGIN';
-
+  } catch (error) {
+    showError('loginError', error.message || 'Login gagal.');
+  } finally {
+    button.disabled = false;
+    button.textContent = 'LOGIN';
   }
+});
+
+document.getElementById('logoutButton').addEventListener('click', async () => {
+  try {
+    if (state.token) await api('logout', {});
+  } catch (_) {}
+
+  state.token = '';
+  state.user = null;
+  state.overview = null;
+  state.performance = null;
+
+  document.getElementById('appScreen').classList.add('hidden');
+  document.getElementById('loginScreen').classList.remove('hidden');
+});
+
+function openApp() {
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('appScreen').classList.remove('hidden');
+
+  document.getElementById('topUserName').textContent =
+    state.user.name || state.user.userId || 'User';
+
+  document.getElementById('topUserCode').textContent =
+    state.user.storeCode || state.user.role || '';
+
+  buildNavigation();
+  navigate('overview');
 }
 
 
-/* =================================================
-   OPEN APP
-================================================= */
-
-function openApp(){
-
-  document
-    .getElementById(
-      'loginPage'
-    )
-    .classList.add(
-      'hidden'
-    );
-
-  document
-    .getElementById(
-      'app'
-    )
-    .classList.remove(
-      'hidden'
-    );
-
-  document
-    .getElementById(
-      'userName'
-    )
-    .textContent =
-    currentUser.name || '';
-
-  document
-    .getElementById(
-      'userStore'
-    )
-    .textContent =
-    currentUser.storeCode
-      ? currentUser.storeCode
-      : currentUser.role;
-
-  const inputStore =
-    document
-      .getElementById(
-        'inputStore'
-      );
-
-  inputStore.value =
-    currentUser.storeCode ||
-    'ALL STORE';
-
-  applyRoleAccess();
-
-  loadBaseData();
-
-  showPage('overview');
-}
-
-
-/* =================================================
-   ROLE ACCESS
-================================================= */
-
-function applyRoleAccess(){
-
-  const role =
-    String(
-      currentUser.role || ''
-    ).toUpperCase();
-
-  const managers =
-    document.querySelectorAll(
-      '.managerOnly'
-    );
-
-  const allowed =
-    [
-      'ADMIN',
-      'TSH',
-      'LEADER'
-    ].includes(role);
-
-  managers.forEach(
-    el => {
-
-      el.classList.toggle(
-        'hidden',
-        !allowed
-      );
-
-    }
-  );
-}
-
-
-/* =================================================
-   LOGOUT
-================================================= */
-
-async function logout(){
-
-  try{
-
-    await api('logout');
-
-  }catch(e){}
-
-  token = '';
-  currentUser = null;
-
-  localStorage.removeItem(
-    'samsung_dashboard_token'
-  );
-
-  localStorage.removeItem(
-    'samsung_dashboard_user'
-  );
-
-  location.reload();
-}
-
-
-/* =================================================
-   NAV
-================================================= */
-
-function showPage(page){
-
-  document
-    .querySelectorAll(
-      '.page'
-    )
-    .forEach(
-      p =>
-        p.classList.add(
-          'hidden'
-        )
-    );
-
-  const target =
-    document.getElementById(
-      'page-' + page
-    );
-
-  if(!target) return;
-
-  target.classList.remove(
-    'hidden'
-  );
-
-  document
-    .querySelectorAll(
-      '.navBtn'
-    )
-    .forEach(btn => {
-
-      btn.classList.toggle(
-        'active',
-        btn.dataset.page === page
-      );
-
-    });
-
-  document
-    .querySelectorAll(
-      '.mobileNav button'
-    )
-    .forEach(btn => {
-
-      btn.classList.toggle(
-        'active',
-        btn.dataset.mobile === page
-      );
-
-    });
-
-  if(page === 'overview')
-    loadOverview();
-
-  if(page === 'performance')
-    loadPerformance();
-
-  if(page === 'input')
-    loadInput();
-
-  if(page === 'focus')
-    loadFocus();
-
-  if(page === 'product')
-    loadProductPage();
-
-  if(page === 'target')
-    loadTargetPage();
-
-  if(page === 'master')
-    loadMasterPage();
-}
-
-
-/* =================================================
-   BASE DATA
-================================================= */
-
-async function loadBaseData(){
-
-  try{
-
-    const typeResult =
-      await api(
-        'getTypes'
-      );
-
-    types =
-      typeResult.rows || [];
-
-    const productResult =
-      await api(
-        'getProducts'
-      );
-
-    products =
-      productResult.rows || [];
-
-    const storeResult =
-      await api(
-        'getStores'
-      );
-
-    stores =
-      storeResult.rows || [];
-
-    fillTypeSelects();
-
-    fillStoreSelect();
-
-  }catch(err){
-
-    console.error(err);
-
-  }
-}
-
-
-/* =================================================
-   TYPES
-================================================= */
-
-function fillTypeSelects(){
-
-  const selects = [
-    'salesType',
-    'focusType',
-    'productType',
-    'targetType'
+/* ======================================================
+   NAVIGATION
+====================================================== */
+
+function menuItems() {
+  const items = [
+    {id:'overview', label:'Overview', icon:'⌂'},
+    {id:'performance', label:'Performance', icon:'▥'},
+    {id:'input', label:'Input Sales', icon:'＋'},
+    {id:'focus', label:'Focus Product', icon:'☆'}
   ];
 
-  selects.forEach(id => {
+  if (['ADMIN','TSH','LEADER'].includes(String(state.user.role).toUpperCase())) {
+    items.push(
+      {id:'product', label:'Product Master', icon:'▤'},
+      {id:'target', label:'Target', icon:'◎'},
+      {id:'master', label:'Master Type', icon:'⚙'}
+    );
+  }
 
-    const select =
-      document.getElementById(id);
+  return items;
+}
 
-    if(!select) return;
+function buildNavigation() {
+  const items = menuItems();
 
-    const old =
-      select.value;
+  document.getElementById('sidebar').innerHTML = items.map(item =>
+    `<button class="navbtn ${item.id === state.page ? 'active':''}"
+      data-page="${item.id}">${item.label}</button>`
+  ).join('');
 
-    select.innerHTML =
-      '<option value="">Pilih Type</option>';
+  document.getElementById('mobileNav').innerHTML = items
+    .filter(item => ['overview','performance','input','focus'].includes(item.id))
+    .map(item => `
+      <button class="${item.id === state.page ? 'active':''}" data-page="${item.id}">
+        <span>${item.icon}</span>${item.label}
+      </button>
+    `).join('');
 
-    types.forEach(t => {
-
-      const opt =
-        document.createElement(
-          'option'
-        );
-
-      opt.value =
-        t.TYPE_NAME;
-
-      opt.textContent =
-        t.TYPE_NAME;
-
-      select.appendChild(opt);
-
-    });
-
-    if(old)
-      select.value = old;
-
+  document.querySelectorAll('[data-page]').forEach(button => {
+    button.addEventListener('click', () => navigate(button.dataset.page));
   });
 }
 
+async function navigate(page) {
+  state.page = page;
+  buildNavigation();
 
-/* =================================================
-   PRODUCTS INPUT
-================================================= */
+  const content = document.getElementById('pageContent');
+  content.innerHTML = '<div class="loading">Memuat data...</div>';
 
-function loadInputProducts(){
+  try {
+    if (page === 'overview') {
+      await loadOverview();
+      renderOverview();
+    } else if (page === 'performance') {
+      await loadPerformance();
+      renderPerformance();
+    } else if (page === 'input') {
+      await loadTypes();
+      await loadProducts();
+      renderInputSales();
+    } else if (page === 'focus') {
+      await loadFocus();
+      renderFocus();
+    } else if (page === 'product') {
+      await loadTypes();
+      await loadProducts();
+      renderProducts();
+    } else if (page === 'target') {
+      await loadTypes();
+      await loadStores();
+      await loadTargets();
+      renderTargets();
+    } else if (page === 'master') {
+      await loadTypes();
+      renderMaster();
+    } else {
+      content.innerHTML = '<div class="card empty">Menu tidak ditemukan.</div>';
+    }
+  } catch (error) {
+    content.innerHTML = `
+      <div class="card">
+        <div class="card-title">Data gagal dimuat</div>
+        <div class="notice error">${escapeHtml(error.message)}</div>
+        <button class="btn btn-primary" onclick="navigate('${escapeHtml(page)}')">Coba Lagi</button>
+      </div>`;
+  }
+}
 
-  const type =
-    document
-      .getElementById(
-        'salesType'
-      )
-      .value;
 
-  const select =
-    document
-      .getElementById(
-        'salesProduct'
-      );
+/* ======================================================
+   DATA LOADERS
+====================================================== */
 
-  select.innerHTML =
-    '<option value="">Pilih Product</option>';
+async function loadOverview() {
+  state.overview = await api('getOverview', {
+    month: state.month,
+    metric: state.metric
+  });
+}
 
-  products
-    .filter(p =>
-      !type ||
-      String(p.TYPE)
-        .toLowerCase() ===
-      String(type)
-        .toLowerCase()
-    )
-    .forEach(p => {
+async function loadPerformance() {
+  state.performance = await api('getPerformance', {
+    month: state.month,
+    metric: state.metric
+  });
+}
 
-      const opt =
-        document.createElement(
-          'option'
-        );
+async function loadTypes() {
+  const result = await api('getTypes');
+  state.types = result.rows || [];
+}
 
-      opt.value =
-        p.MODEL;
+async function loadProducts(type = '') {
+  const result = await api('getProducts', {type});
+  state.products = result.rows || [];
+}
 
-      opt.textContent =
-        p.MODEL;
+async function loadFocus() {
+  const result = await api('getFocusProducts', {month:state.month});
+  state.focus = result.rows || [];
+}
 
-      opt.dataset.value =
-        p.VALUE;
+async function loadTargets() {
+  const result = await api('getTargets', {month:state.month});
+  state.targets = result.rows || [];
+}
 
-      select.appendChild(opt);
+async function loadStores() {
+  const result = await api('getStores');
+  state.stores = result.rows || [];
+}
 
+
+/* ======================================================
+   SHARED FILTERS
+====================================================== */
+
+function filtersHtml() {
+  return `
+    <div class="toolbar">
+      <input class="month-input" id="monthFilter" type="month"
+        value="${escapeHtml(state.month)}" aria-label="Pilih bulan">
+      <button class="btn metric-btn ${state.metric === 'QTY' ? 'active':''}"
+        id="qtyButton">QTY</button>
+      <button class="btn metric-btn ${state.metric === 'VALUE' ? 'active':''}"
+        id="valueButton">VALUE</button>
+    </div>`;
+}
+
+function bindFilters(onChange) {
+  const month = document.getElementById('monthFilter');
+  const qty = document.getElementById('qtyButton');
+  const value = document.getElementById('valueButton');
+
+  if (month) {
+    month.addEventListener('change', async () => {
+      if (month.value) state.month = month.value;
+      await onChange();
     });
-
-  updateSalesPreview();
-}
-
-
-function updateSalesPreview(){
-
-  const productSelect =
-    document
-      .getElementById(
-        'salesProduct'
-      );
-
-  const qty =
-    Number(
-      document
-        .getElementById(
-          'salesQty'
-        )
-        .value
-    ) || 0;
-
-  const option =
-    productSelect
-      .options[
-        productSelect.selectedIndex
-      ];
-
-  const unitValue =
-    Number(
-      option?.dataset?.value || 0
-    );
-
-  const total =
-    qty *
-    unitValue;
-
-  document
-    .getElementById(
-      'salesPreview'
-    )
-    .innerHTML =
-
-      unitValue > 0
-
-      ?
-
-      `Harga Master:
-       <strong>${formatMoney(unitValue)}</strong>
-       &nbsp; × &nbsp;
-       QTY:
-       <strong>${qty}</strong>
-       &nbsp; = &nbsp;
-       VALUE:
-       <strong>${formatMoney(total)}</strong>`
-
-      :
-
-      'Pilih product dan QTY.';
-}
-
-
-/* =================================================
-   INPUT PAGE
-================================================= */
-
-function loadInput(){
-
-  const dateInput =
-    document
-      .getElementById(
-        'salesDate'
-      );
-
-  if(!dateInput.value){
-
-    dateInput.value =
-      new Date()
-        .toISOString()
-        .slice(0,10);
-
   }
 
-  loadInputProducts();
-}
-
-
-async function saveSales(){
-
-  const date =
-    document
-      .getElementById(
-        'salesDate'
-      )
-      .value;
-
-  const type =
-    document
-      .getElementById(
-        'salesType'
-      )
-      .value;
-
-  const model =
-    document
-      .getElementById(
-        'salesProduct'
-      )
-      .value;
-
-  const qty =
-    Number(
-      document
-        .getElementById(
-          'salesQty'
-        )
-        .value
-    );
-
-  if(!date){
-
-    alert(
-      'Tanggal wajib diisi.'
-    );
-
-    return;
+  if (qty) {
+    qty.addEventListener('click', async () => {
+      state.metric = 'QTY';
+      await onChange();
+    });
   }
 
-  if(!type){
-
-    alert(
-      'Pilih Type.'
-    );
-
-    return;
-  }
-
-  if(!model){
-
-    alert(
-      'Pilih Product.'
-    );
-
-    return;
-  }
-
-  if(!qty || qty <= 0){
-
-    alert(
-      'QTY harus lebih dari 0.'
-    );
-
-    return;
-  }
-
-  try{
-
-    const result =
-      await api(
-        'saveSales',
-        {
-          date:date,
-          type:type,
-          model:model,
-          qty:qty
-        }
-      );
-
-    alert(
-      'Sales berhasil disimpan.\n\n' +
-      'Product: ' +
-      result.data.model +
-      '\nQTY: ' +
-      result.data.qty +
-      '\nVALUE: ' +
-      formatMoney(
-        result.data.value
-      )
-    );
-
-    document
-      .getElementById(
-        'salesQty'
-      )
-      .value = '';
-
-    updateSalesPreview();
-
-    loadOverview();
-
-  }catch(err){
-
-    alert(
-      err.message
-    );
+  if (value) {
+    value.addEventListener('click', async () => {
+      state.metric = 'VALUE';
+      await onChange();
+    });
   }
 }
 
+function pageHeader(title, subtitle, withFilters = false) {
+  return `
+    <div class="page-head">
+      <div>
+        <h1>${escapeHtml(title)}</h1>
+        <div class="subtitle">${escapeHtml(subtitle)}</div>
+      </div>
+      ${withFilters ? filtersHtml() : ''}
+    </div>`;
+}
 
-/* =================================================
+
+/* ======================================================
    OVERVIEW
-================================================= */
+====================================================== */
 
-async function loadOverview(){
+function renderOverview() {
+  const d = state.overview || {};
+  const actual = numberValue(d.actual);
+  const target = numberValue(d.target);
+  const achievement = numberValue(d.achievement);
+  const estimation = numberValue(d.estimation);
 
-  const month =
-    document
-      .getElementById(
-        'overviewMonth'
-      )
-      .value;
+  const weeks = Array.isArray(d.weeks) ? d.weeks : [];
+  const series = Array.isArray(d.series) ? d.series : [];
+  const focus = Array.isArray(d.focus) ? d.focus : [];
 
-  document
-    .getElementById(
-      'overviewKpi'
-    )
-    .innerHTML =
-    '<div class="loading">Loading...</div>';
+  document.getElementById('pageContent').innerHTML = `
+    ${pageHeader('Overview', 'Performance store bulan berjalan', true)}
 
-  try{
+    <section class="card">
+      <div class="card-title">Focus Product</div>
+      <div class="card-subtitle">${escapeHtml(monthLabel(state.month))}</div>
+      ${focus.length ? `
+        <div class="focus-list">
+          ${focus.map(renderFocusCard).join('')}
+        </div>
+      ` : `<div class="empty">Belum ada focus product bulan ini.</div>`}
+    </section>
 
-    const result =
-      await api(
-        'getOverview',
-        {
-          month:month,
-          metric:metric
-        }
-      );
+    <section class="kpis">
+      <div class="kpi">
+        <div class="kpi-label">Target</div>
+        <div class="kpi-value">${metricFormat(target)}</div>
+        <div class="kpi-note">${state.metric === 'VALUE' ? 'Nilai target' : 'Target unit'}</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Actual</div>
+        <div class="kpi-value">${metricFormat(actual)}</div>
+        <div class="kpi-note">Penjualan tercatat</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Achievement</div>
+        <div class="kpi-value ${achievementClass(achievement)}">${pct(achievement)}</div>
+        <div class="kpi-note">Actual dibanding target</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi-label">Estimation</div>
+        <div class="kpi-value">${metricFormat(estimation)}</div>
+        <div class="kpi-note">Estimasi akhir bulan</div>
+      </div>
+    </section>
 
-    renderOverview(
-      result
-    );
+    <section class="card">
+      <div class="card-title">Last 3 Weeks</div>
+      <div class="card-subtitle">Pergerakan penjualan (${state.metric})</div>
+      ${weeks.length ? `
+        <div class="grid3">
+          ${weeks.map(w => `
+            <div class="weekbox">
+              <div class="weekname">${escapeHtml(w.label || 'Week')}</div>
+              <div class="weekvalue">${metricFormat(w.actual)}</div>
+              <div class="weekdate">${escapeHtml(w.start || '')} → ${escapeHtml(w.end || '')}</div>
+            </div>
+          `).join('')}
+        </div>
+      ` : '<div class="empty">Belum ada data mingguan.</div>'}
+    </section>
 
-  }catch(err){
+    <section class="card">
+      <div class="card-title">Performance by Series</div>
+      <div class="card-subtitle">Achievement per series</div>
+      ${series.length ? `
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Series</th><th>Target</th><th>Actual</th><th>Achievement</th>
+            </tr></thead>
+            <tbody>
+              ${series.map(r => `
+                <tr>
+                  <td>${escapeHtml(r.type)}</td>
+                  <td>${metricFormat(r.target)}</td>
+                  <td>${metricFormat(r.actual)}</td>
+                  <td class="${achievementClass(r.achievement)}">${pct(r.achievement)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      ` : '<div class="empty">Belum ada data series.</div>'}
+    </section>`;
 
-    document
-      .getElementById(
-        'overviewKpi'
-      )
-      .innerHTML =
-      '<div class="empty">' +
-      escapeHtml(err.message) +
-      '</div>';
-  }
+  bindFilters(async () => {
+    await loadOverview();
+    renderOverview();
+  });
 }
 
-
-function renderOverview(data){
-
-  document
-    .getElementById(
-      'overviewKpi'
-    )
-    .innerHTML = `
-
-      <div class="kpi">
-
-        <div class="kpiLabel">
-          TARGET
-        </div>
-
-        <div class="kpiValue">
-          ${formatCompact(data.target)}
-        </div>
-
-      </div>
-
-
-      <div class="kpi">
-
-        <div class="kpiLabel">
-          ACTUAL
-        </div>
-
-        <div class="kpiValue">
-          ${formatCompact(data.actual)}
-        </div>
-
-      </div>
-
-
-      <div class="kpi">
-
-        <div class="kpiLabel">
-          ACHIEVEMENT
-        </div>
-
-        <div class="kpiValue ${achievementClass(data.achievement)}">
-
-          ${formatPercent(data.achievement)}
-
-        </div>
-
-      </div>
-
-
-      <div class="kpi">
-
-        <div class="kpiLabel">
-          ESTIMATION
-        </div>
-
-        <div class="kpiValue">
-
-          ${formatCompact(data.estimation)}
-
-        </div>
-
-        <div class="kpiTarget">
-          Projection month
-        </div>
-
-      </div>
-
-    `;
-
-
-  renderFocusOverview(
-    data.focus || []
-  );
-
-
-  document
-    .getElementById(
-      'weekOverview'
-    )
-    .innerHTML =
-    (data.weeks || [])
-      .map(w => `
-
-        <div class="weekCard">
-
-          <div class="weekTitle">
-            ${escapeHtml(w.label)}
-          </div>
-
-          <div class="weekValue">
-            ${formatCompact(w.actual)}
-          </div>
-
-          <div class="weekDate">
-            ${w.start} → ${w.end}
-          </div>
-
-        </div>
-
-      `)
-      .join('');
-
-
-  document
-    .getElementById(
-      'seriesOverview'
-    )
-    .innerHTML =
-    renderSeriesTable(
-      data.series || []
-    );
-}
-
-
-function renderFocusOverview(rows){
-
-  const el =
-    document.getElementById(
-      'focusOverview'
-    );
-
-  if(!rows.length){
-
-    el.innerHTML = `
-
-      <div class="cardTitle">
-        Focus Product
-      </div>
-
-      <div class="empty">
-        Belum ada focus product bulan ini.
-      </div>
-
-    `;
-
-    return;
-  }
-
-  el.innerHTML = `
-
-    <div class="cardTitle">
-      Focus Product
-    </div>
-
-    <div class="cardSub">
-      Prioritas product bulan berjalan
-    </div>
-
-    <div class="focusGrid">
-
-      ${rows.map(f => `
-
-        <div class="focusCard">
-
-          <div class="focusPriority">
-            ${escapeHtml(f.priority || 'NORMAL')}
-          </div>
-
-          <div class="focusModel">
-            ${escapeHtml(f.model)}
-          </div>
-
-          <div class="focusType">
-            ${escapeHtml(f.type)}
-          </div>
-
-          <div class="focusNumbers">
-
-            <div>
-
-              <div class="smallLabel">
-                Target
-              </div>
-
-              <div class="smallValue">
-                ${formatCompact(f.target)}
-              </div>
-
-            </div>
-
-            <div>
-
-              <div class="smallLabel">
-                Actual
-              </div>
-
-              <div class="smallValue">
-                ${formatCompact(f.actual)}
-              </div>
-
-            </div>
-
-            <div>
-
-              <div class="smallLabel">
-                Ach
-              </div>
-
-              <div class="smallValue ${achievementClass(f.achievement)}">
-                ${formatPercent(f.achievement)}
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      `).join('')}
-
-    </div>
-
-  `;
-}
-
-
-function renderSeriesTable(rows){
-
-  if(!rows.length){
-
-    return `
-      <div class="empty">
-        Belum ada data series.
-      </div>
-    `;
-  }
+function renderFocusCard(f) {
+  const target = numberValue(f.target);
+  const actual = numberValue(f.actual);
+  const achievement = numberValue(f.achievement);
+  const width = Math.max(0, Math.min(100, achievement));
 
   return `
-
-    <table>
-
-      <thead>
-
-        <tr>
-
-          <th>
-            SERIES
-          </th>
-
-          <th>
-            TARGET
-          </th>
-
-          <th>
-            ACTUAL
-          </th>
-
-          <th>
-            ACHIEVEMENT
-          </th>
-
-        </tr>
-
-      </thead>
-
-      <tbody>
-
-        ${rows.map(r => `
-
-          <tr>
-
-            <td>
-              <strong>
-                ${escapeHtml(r.type)}
-              </strong>
-            </td>
-
-            <td>
-              ${formatCompact(r.target)}
-            </td>
-
-            <td>
-              ${formatCompact(r.actual)}
-            </td>
-
-            <td class="${achievementClass(r.achievement)}">
-              ${formatPercent(r.achievement)}
-            </td>
-
-          </tr>
-
-        `).join('')}
-
-      </tbody>
-
-    </table>
-
-  `;
+    <div class="focus-item">
+      <div class="section-label">${escapeHtml(f.type || '')}</div>
+      <div class="focus-model">${escapeHtml(f.model || '-')}</div>
+      <div class="subtitle">Target: ${metricFormat(target)}</div>
+      <div style="margin-top:7px;font-size:13px">Actual: <strong>${metricFormat(actual)}</strong></div>
+      <div style="margin-top:8px" class="${achievementClass(achievement)}">${pct(achievement)}</div>
+      <div class="progress"><div style="width:${width}%"></div></div>
+    </div>`;
 }
 
 
-/* =================================================
-   METRIC
-================================================= */
+/* ======================================================
+   PERFORMANCE PAGE
+====================================================== */
 
-function setMetric(value){
+function renderPerformance() {
+  const d = state.performance || {};
+  const rows = Array.isArray(d.rows) ? d.rows : [];
 
-  metric =
-    value;
+  document.getElementById('pageContent').innerHTML = `
+    ${pageHeader('Performance', 'Ringkasan penjualan berdasarkan akses store', true)}
+    <section class="card">
+      <div class="card-title">Performance Store</div>
+      <div class="card-subtitle">${escapeHtml(monthLabel(state.month))} · ${state.metric}</div>
+      ${rows.length ? `
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th>Store</th><th>Target</th><th>Actual</th><th>Achievement</th>
+            </tr></thead>
+            <tbody>
+              ${rows.map(r => `
+                <tr>
+                  <td>${escapeHtml(r.storeName || r.storeCode)}</td>
+                  <td>${metricFormat(r.target)}</td>
+                  <td>${metricFormat(r.actual)}</td>
+                  <td class="${achievementClass(r.achievement)}">${pct(r.achievement)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      ` : '<div class="empty">Belum ada transaksi pada periode ini.</div>'}
+    </section>`;
 
-  document
-    .getElementById(
-      'qtyBtn'
-    )
-    .classList.toggle(
-      'active',
-      value === 'QTY'
-    );
-
-  document
-    .getElementById(
-      'valueBtn'
-    )
-    .classList.toggle(
-      'active',
-      value === 'VALUE'
-    );
-
-  loadOverview();
+  bindFilters(async () => {
+    await loadPerformance();
+    renderPerformance();
+  });
 }
 
 
-/* =================================================
-   PERFORMANCE
-================================================= */
+/* ======================================================
+   INPUT SALES
+====================================================== */
 
-function setPerformanceMetric(value){
+function renderInputSales() {
+  const types = state.types || [];
+  const products = state.products || [];
+  const storeLabel = state.user.storeCode || 'Store sesuai akun login';
 
-  performanceMetric =
-    value;
+  document.getElementById('pageContent').innerHTML = `
+    ${pageHeader('Input Sales', 'Input transaksi berdasarkan QTY. Value otomatis dari Product Master.')}
 
-  document
-    .getElementById(
-      'perfQtyBtn'
-    )
-    .classList.toggle(
-      'active',
-      value === 'QTY'
-    );
+    <form id="salesForm">
+      <section class="card">
+        <div class="card-title">Store</div>
+        <div class="card-subtitle">Store otomatis mengikuti akun login.</div>
+        <input class="store-lock" value="${escapeHtml(storeLabel)}" readonly>
+      </section>
 
-  document
-    .getElementById(
-      'perfValueBtn'
-    )
-    .classList.toggle(
-      'active',
-      value === 'VALUE'
-    );
+      <section class="card">
+        <div class="form-grid">
+          <div class="field">
+            <label for="salesDate">TANGGAL</label>
+            <input id="salesDate" type="date" value="${todayString()}" max="${todayString()}" required>
+            <small>Lu bisa memilih tanggal sebelumnya jika lupa input.</small>
+          </div>
 
-  loadPerformance();
-}
+          <div class="field">
+            <label for="salesType">TYPE / SERIES</label>
+            <select id="salesType" required>
+              <option value="">Pilih Type</option>
+              ${types.map(t => `
+                <option value="${escapeHtml(t.TYPE_NAME)}">${escapeHtml(t.TYPE_NAME)}</option>
+              `).join('')}
+            </select>
+          </div>
 
+          <div class="field">
+            <label for="salesProduct">PRODUCT</label>
+            <select id="salesProduct" required>
+              <option value="">Pilih Product</option>
+              ${products.map(p => `
+                <option value="${escapeHtml(p.MODEL)}"
+                  data-value="${numberValue(p.VALUE)}"
+                  data-type="${escapeHtml(p.TYPE)}">
+                  ${escapeHtml(p.MODEL)}
+                </option>
+              `).join('')}
+            </select>
+          </div>
 
-async function loadPerformance(){
+          <div class="field">
+            <label for="salesQty">QTY</label>
+            <input id="salesQty" type="number" min="1" step="1" placeholder="Masukkan QTY" required>
+          </div>
 
-  const month =
-    document
-      .getElementById(
-        'performanceMonth'
-      )
-      .value;
-
-  const el =
-    document
-      .getElementById(
-        'performanceTable'
-      );
-
-  el.innerHTML =
-    '<div class="loading">Loading...</div>';
-
-  try{
-
-    const result =
-      await api(
-        'getPerformance',
-        {
-          month:month,
-          metric:performanceMetric
-        }
-      );
-
-    if(!result.rows.length){
-
-      el.innerHTML =
-        '<div class="empty">Belum ada data.</div>';
-
-      return;
-    }
-
-    el.innerHTML = `
-
-      <table>
-
-        <thead>
-
-          <tr>
-
-            <th>
-              STORE
-            </th>
-
-            <th>
-              TARGET
-            </th>
-
-            <th>
-              ACTUAL
-            </th>
-
-            <th>
-              ACHIEVEMENT
-            </th>
-
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          ${result.rows.map(r => `
-
-            <tr>
-
-              <td>
-
-                <strong>
-                  ${escapeHtml(r.storeName)}
-                </strong>
-
-                <br>
-
-                <span style="font-size:10px;color:#6b7280">
-                  ${escapeHtml(r.storeCode)}
-                </span>
-
-              </td>
-
-              <td>
-                ${formatCompact(r.target)}
-              </td>
-
-              <td>
-                ${formatCompact(r.actual)}
-              </td>
-
-              <td class="${achievementClass(r.achievement)}">
-                ${formatPercent(r.achievement)}
-              </td>
-
-            </tr>
-
-          `).join('')}
-
-        </tbody>
-
-      </table>
-
-    `;
-
-  }catch(err){
-
-    el.innerHTML =
-      '<div class="empty">' +
-      escapeHtml(err.message) +
-      '</div>';
-
-  }
-}
-
-
-/* =================================================
-   FOCUS
-================================================= */
-
-async function loadFocus(){
-
-  const month =
-    document
-      .getElementById(
-        'focusMonth'
-      )
-      .value;
-
-  const el =
-    document
-      .getElementById(
-        'focusList'
-      );
-
-  el.innerHTML =
-    '<div class="loading">Loading...</div>';
-
-  try{
-
-    const result =
-      await api(
-        'getFocusProducts',
-        {
-          month:month
-        }
-      );
-
-    if(!result.rows.length){
-
-      el.innerHTML = `
-
-        <div class="card">
-          <div class="empty">
-            Belum ada focus product.
+          <div class="field field-full">
+            <div class="preview" id="salesPreview">Pilih product dan QTY.</div>
           </div>
         </div>
 
-      `;
-
-      return;
-    }
-
-    el.innerHTML = `
-
-      <div class="card">
-
-        <div class="focusGrid">
-
-          ${result.rows.map(f => `
-
-            <div class="focusCard">
-
-              <div class="focusPriority">
-                ${escapeHtml(f.PRIORITY)}
-              </div>
-
-              <div class="focusModel">
-                ${escapeHtml(f.MODEL)}
-              </div>
-
-              <div class="focusType">
-                ${escapeHtml(f.TYPE)}
-              </div>
-
-              <div class="smallLabel">
-                Target
-              </div>
-
-              <div class="smallValue">
-                ${formatCompact(f.TARGET)}
-              </div>
-
-            </div>
-
-          `).join('')}
-
+        <div id="salesError" class="notice error hidden" style="margin-top:14px"></div>
+        <div class="form-actions">
+          <button class="btn btn-primary" id="saveSalesButton" type="submit">SIMPAN SALES</button>
         </div>
-
-      </div>
-
-    `;
-
-  }catch(err){
-
-    el.innerHTML =
-      '<div class="empty">' +
-      escapeHtml(err.message) +
-      '</div>';
-  }
-}
-
-
-async function loadFocusProductsForm(){
-
-  const type =
-    document
-      .getElementById(
-        'focusType'
-      )
-      .value;
-
-  const select =
-    document
-      .getElementById(
-        'focusModel'
-      );
-
-  select.innerHTML =
-    '<option value="">Pilih Product</option>';
-
-  products
-    .filter(p =>
-      String(p.TYPE)
-        .toLowerCase() ===
-      String(type)
-        .toLowerCase()
-    )
-    .forEach(p => {
-
-      const opt =
-        document.createElement(
-          'option'
-        );
-
-      opt.value =
-        p.MODEL;
-
-      opt.textContent =
-        p.MODEL;
-
-      select.appendChild(
-        opt
-      );
-
-    });
-}
-
-
-async function saveFocus(){
-
-  try{
-
-    await api(
-      'saveFocus',
-      {
-        month:
-          document
-            .getElementById(
-              'focusInputMonth'
-            ).value,
-
-        type:
-          document
-            .getElementById(
-              'focusType'
-            ).value,
-
-        model:
-          document
-            .getElementById(
-              'focusModel'
-            ).value,
-
-        target:
-          document
-            .getElementById(
-              'focusTarget'
-            ).value,
-
-        priority:
-          document
-            .getElementById(
-              'focusPriority'
-            ).value
-      }
-    );
-
-    alert(
-      'Focus Product berhasil disimpan.'
-    );
-
-    loadFocus();
-
-  }catch(err){
-
-    alert(
-      err.message
-    );
-  }
-}
-
-
-/* =================================================
-   PRODUCT PAGE
-================================================= */
-
-async function loadProductPage(){
-
-  const result =
-    await api(
-      'getProducts'
-    );
-
-  products =
-    result.rows || [];
-
-  renderProductTable();
-
-}
-
-
-function renderProductTable(){
-
-  const el =
-    document
-      .getElementById(
-        'productTable'
-      );
-
-  if(!products.length){
-
-    el.innerHTML =
-      '<div class="empty">Belum ada product.</div>';
-
-    return;
-  }
-
-  el.innerHTML = `
-
-    <table>
-
-      <thead>
-
-        <tr>
-
-          <th>
-            MODEL
-          </th>
-
-          <th>
-            TYPE
-          </th>
-
-          <th>
-            VALUE
-          </th>
-
-          <th>
-            STATUS
-          </th>
-
-        </tr>
-
-      </thead>
-
-      <tbody>
-
-        ${products.map(p => `
-
-          <tr>
-
-            <td>
-              <strong>
-                ${escapeHtml(p.MODEL)}
-              </strong>
-            </td>
-
-            <td>
-              ${escapeHtml(p.TYPE)}
-            </td>
-
-            <td>
-              ${formatMoney(p.VALUE)}
-            </td>
-
-            <td>
-              <span class="badge">
-                ${escapeHtml(p.STATUS)}
-              </span>
-            </td>
-
-          </tr>
-
-        `).join('')}
-
-      </tbody>
-
-    </table>
-
-  `;
-}
-
-
-async function saveProduct(){
-
-  try{
-
-    await api(
-      'saveProduct',
-      {
-        type:
-          document
-            .getElementById(
-              'productType'
-            ).value,
-
-        model:
-          document
-            .getElementById(
-              'productModel'
-            ).value,
-
-        value:
-          document
-            .getElementById(
-              'productValue'
-            ).value
-      }
-    );
-
-    alert(
-      'Product berhasil ditambahkan.'
-    );
-
-    document
-      .getElementById(
-        'productModel'
-      ).value = '';
-
-    document
-      .getElementById(
-        'productValue'
-      ).value = '';
-
-    const result =
-      await api(
-        'getProducts'
-      );
-
-    products =
-      result.rows || [];
-
-    renderProductTable();
-
-  }catch(err){
-
-    alert(
-      err.message
-    );
-  }
-}
-
-
-/* =================================================
-   TARGET
-================================================= */
-
-function fillStoreSelect(){
-
-  const select =
-    document
-      .getElementById(
-        'targetStore'
-      );
-
-  if(!select) return;
-
-  select.innerHTML =
-    '<option value="">Pilih Store</option>';
-
-  stores.forEach(s => {
-
-    const opt =
-      document.createElement(
-        'option'
-      );
-
-    opt.value =
-      s.STORE_CODE;
-
-    opt.textContent =
-      s.STORE_NAME +
-      ' (' +
-      s.STORE_CODE +
-      ')';
-
-    select.appendChild(
-      opt
-    );
-
+      </section>
+    </form>`;
+
+  const typeEl = document.getElementById('salesType');
+  const productEl = document.getElementById('salesProduct');
+  const qtyEl = document.getElementById('salesQty');
+
+  typeEl.addEventListener('change', () => {
+    const selectedType = typeEl.value;
+    const filtered = products.filter(p => String(p.TYPE) === selectedType);
+
+    productEl.innerHTML = '<option value="">Pilih Product</option>' +
+      filtered.map(p => `
+        <option value="${escapeHtml(p.MODEL)}" data-value="${numberValue(p.VALUE)}">
+          ${escapeHtml(p.MODEL)}
+        </option>
+      `).join('');
+
+    updateSalesPreview();
   });
 
-  if(
-    currentUser &&
-    currentUser.storeCode
-  ){
+  productEl.addEventListener('change', updateSalesPreview);
+  qtyEl.addEventListener('input', updateSalesPreview);
 
-    select.value =
-      currentUser.storeCode;
+  document.getElementById('salesForm').addEventListener('submit', saveSalesFromForm);
+}
 
-    if(
-      String(currentUser.role)
-        .toUpperCase() ===
-      'STORE'
-    ){
+function updateSalesPreview() {
+  const productEl = document.getElementById('salesProduct');
+  const qtyEl = document.getElementById('salesQty');
+  const preview = document.getElementById('salesPreview');
+  if (!productEl || !qtyEl || !preview) return;
 
-      select.disabled = true;
+  const option = productEl.options[productEl.selectedIndex];
+  const unitValue = option ? numberValue(option.dataset.value) : 0;
+  const qty = numberValue(qtyEl.value);
 
+  if (!productEl.value || qty <= 0) {
+    preview.textContent = 'Pilih product dan QTY.';
+    return;
+  }
+
+  preview.innerHTML = `
+    Harga Master: <strong>${integer(unitValue)}</strong>
+    &nbsp; × &nbsp; QTY: <strong>${integer(qty)}</strong>
+    &nbsp; = &nbsp; VALUE: <strong>${integer(unitValue * qty)}</strong>`;
+}
+
+async function saveSalesFromForm(event) {
+  event.preventDefault();
+  hideError('salesError');
+
+  const button = document.getElementById('saveSalesButton');
+  button.disabled = true;
+  button.textContent = 'MENYIMPAN...';
+
+  const date = document.getElementById('salesDate').value;
+  const type = document.getElementById('salesType').value;
+  const model = document.getElementById('salesProduct').value;
+  const qty = document.getElementById('salesQty').value;
+
+  try {
+    const result = await api('saveSales', {date, type, model, qty});
+    showToast('Sales berhasil disimpan.');
+
+    document.getElementById('salesQty').value = '';
+    updateSalesPreview();
+
+    if (state.page === 'input') {
+      // Refresh latest data after saving.
+      await loadOverview();
     }
 
+    console.log('Sales saved:', result.data);
+  } catch (error) {
+    showError('salesError', error.message || 'Gagal menyimpan sales.');
+  } finally {
+    button.disabled = false;
+    button.textContent = 'SIMPAN SALES';
   }
 }
 
 
-async function loadTargetPage(){
+/* ======================================================
+   FOCUS PRODUCT PAGE
+====================================================== */
 
-  const month =
-    document
-      .getElementById(
-        'targetMonth'
-      )
-      .value;
+function renderFocus() {
+  document.getElementById('pageContent').innerHTML = `
+    ${pageHeader('Focus Product', 'Monitoring produk fokus bulanan', true)}
+    <section class="card">
+      <div class="card-title">Daftar Focus Product</div>
+      <div class="card-subtitle">${escapeHtml(monthLabel(state.month))}</div>
+      ${state.focus.length ? `
+        <div class="focus-list">${state.focus.map(renderFocusCard).join('')}</div>
+      ` : '<div class="empty">Belum ada focus product pada bulan ini.</div>'}
+    </section>`;
 
-  const result =
-    await api(
-      'getTargets',
-      {
-        month:month
+  bindFilters(async () => {
+    await loadFocus();
+    renderFocus();
+  });
+}
+
+
+/* ======================================================
+   PRODUCT MASTER PAGE
+====================================================== */
+
+function renderProducts() {
+  const canManage = ['ADMIN','TSH','LEADER'].includes(String(state.user.role).toUpperCase());
+
+  document.getElementById('pageContent').innerHTML = `
+    ${pageHeader('Product Master', 'Daftar model dan harga unit')}
+
+    ${canManage ? `
+      <section class="card">
+        <div class="card-title">Tambah Product</div>
+        <form id="productForm" class="form-grid" style="margin-top:16px">
+          <div class="field">
+            <label>MODEL</label>
+            <input id="newProductModel" required placeholder="Contoh: Galaxy S26 256">
+          </div>
+          <div class="field">
+            <label>TYPE</label>
+            <select id="newProductType" required>
+              <option value="">Pilih Type</option>
+              ${state.types.map(t => `<option value="${escapeHtml(t.TYPE_NAME)}">${escapeHtml(t.TYPE_NAME)}</option>`).join('')}
+            </select>
+          </div>
+          <div class="field">
+            <label>VALUE / HARGA UNIT</label>
+            <input id="newProductValue" type="number" min="1" required placeholder="Harga angka saja">
+          </div>
+          <div class="field" style="display:flex;align-items:end">
+            <button class="btn btn-primary" type="submit" style="width:100%">SIMPAN PRODUCT</button>
+          </div>
+        </form>
+      </section>
+    ` : ''}
+
+    <section class="card">
+      <div class="card-title">Product Aktif</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Model</th><th>Type</th><th>Value / Unit</th><th>Status</th></tr></thead>
+          <tbody>
+            ${state.products.length ? state.products.map(p => `
+              <tr>
+                <td>${escapeHtml(p.MODEL)}</td>
+                <td>${escapeHtml(p.TYPE)}</td>
+                <td>${integer(p.VALUE)}</td>
+                <td>${escapeHtml(p.STATUS || 'ACTIVE')}</td>
+              </tr>
+            `).join('') : '<tr><td colspan="4" class="empty">Belum ada product aktif.</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+    </section>`;
+
+  const form = document.getElementById('productForm');
+  if (form) {
+    form.addEventListener('submit', async event => {
+      event.preventDefault();
+      const model = document.getElementById('newProductModel').value.trim();
+      const type = document.getElementById('newProductType').value;
+      const value = document.getElementById('newProductValue').value;
+
+      try {
+        await api('saveProduct', {model,type,value});
+        showToast('Product berhasil ditambahkan.');
+        await loadProducts();
+        renderProducts();
+      } catch (error) {
+        showToast(error.message, true);
       }
-    );
-
-  const rows =
-    result.rows || [];
-
-  const el =
-    document
-      .getElementById(
-        'targetTable'
-      );
-
-  if(!rows.length){
-
-    el.innerHTML =
-      '<div class="empty">Belum ada target.</div>';
-
-    return;
-  }
-
-  el.innerHTML = `
-
-    <table>
-
-      <thead>
-
-        <tr>
-
-          <th>
-            STORE
-          </th>
-
-          <th>
-            TYPE
-          </th>
-
-          <th>
-            MODEL
-          </th>
-
-          <th>
-            SYSTEM
-          </th>
-
-          <th>
-            ADJUST
-          </th>
-
-          <th>
-            ACTIVE
-          </th>
-
-        </tr>
-
-      </thead>
-
-      <tbody>
-
-        ${rows.map(r => `
-
-          <tr>
-
-            <td>
-              ${escapeHtml(r.STORE_CODE)}
-            </td>
-
-            <td>
-              ${escapeHtml(r.TYPE)}
-            </td>
-
-            <td>
-              ${escapeHtml(r.MODEL || '-')}
-            </td>
-
-            <td>
-              ${formatCompact(r.SYSTEM_TARGET)}
-            </td>
-
-            <td>
-              ${formatCompact(r.ADJUST_TARGET)}
-            </td>
-
-            <td>
-              <strong>
-                ${formatCompact(r.ACTIVE_TARGET)}
-              </strong>
-            </td>
-
-          </tr>
-
-        `).join('')}
-
-      </tbody>
-
-    </table>
-
-  `;
-}
-
-
-async function saveTarget(){
-
-  try{
-
-    await api(
-      'saveTarget',
-      {
-        month:
-          document
-            .getElementById(
-              'targetMonth'
-            ).value,
-
-        storeCode:
-          document
-            .getElementById(
-              'targetStore'
-            ).value,
-
-        type:
-          document
-            .getElementById(
-              'targetType'
-            ).value,
-
-        model:
-          document
-            .getElementById(
-              'targetModel'
-            ).value,
-
-        systemTarget:
-          document
-            .getElementById(
-              'systemTarget'
-            ).value,
-
-        adjustTarget:
-          document
-            .getElementById(
-              'adjustTarget'
-            ).value
-      }
-    );
-
-    alert(
-      'Target berhasil disimpan.'
-    );
-
-    loadTargetPage();
-
-  }catch(err){
-
-    alert(
-      err.message
-    );
-
+    });
   }
 }
 
 
-/* =================================================
-   MASTER
-================================================= */
+/* ======================================================
+   TARGET PAGE
+====================================================== */
 
-async function loadMasterPage(){
+function renderTargets() {
+  document.getElementById('pageContent').innerHTML = `
+    ${pageHeader('Target Management', 'Target per bulan dan store')}
 
-  const result =
-    await api(
-      'getTypes'
-    );
+    <section class="card">
+      <div class="card-title">Tambah Target</div>
+      <div class="card-subtitle">Active target memakai Adjust Target jika lebih dari 0; selain itu memakai System Target.</div>
 
-  types =
-    result.rows || [];
+      <form id="targetForm" class="form-grid">
+        <div class="field">
+          <label>BULAN</label>
+          <input id="targetMonth" type="month" value="${escapeHtml(state.month)}" required>
+        </div>
+        <div class="field">
+          <label>STORE</label>
+          <select id="targetStore" required>
+            <option value="">Pilih Store</option>
+            ${state.stores.map(s => `
+              <option value="${escapeHtml(s.STORE_CODE)}">${escapeHtml(s.STORE_NAME)} (${escapeHtml(s.STORE_CODE)})</option>
+            `).join('')}
+          </select>
+        </div>
+        <div class="field">
+          <label>TYPE (OPSIONAL)</label>
+          <select id="targetType">
+            <option value="">Semua Type</option>
+            ${state.types.map(t => `<option value="${escapeHtml(t.TYPE_NAME)}">${escapeHtml(t.TYPE_NAME)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="field">
+          <label>MODEL (OPSIONAL)</label>
+          <input id="targetModel" placeholder="Nama model jika target per produk">
+        </div>
+        <div class="field">
+          <label>SYSTEM TARGET</label>
+          <input id="systemTarget" type="number" min="0" value="0" required>
+        </div>
+        <div class="field">
+          <label>ADJUST TARGET</label>
+          <input id="adjustTarget" type="number" min="0" value="0" required>
+        </div>
+        <div class="field field-full">
+          <button class="btn btn-primary" type="submit">SIMPAN TARGET</button>
+        </div>
+      </form>
+    </section>
 
-  renderTypeTable();
+    <section class="card">
+      <div class="card-title">Daftar Target</div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Store</th><th>Type</th><th>Model</th><th>System</th><th>Adjust</th><th>Active</th></tr></thead>
+          <tbody>
+            ${state.targets.length ? state.targets.map(t => {
+              const system = numberValue(t.SYSTEM_TARGET);
+              const adjust = numberValue(t.ADJUST_TARGET);
+              return `<tr>
+                <td>${escapeHtml(t.STORE_CODE)}</td>
+                <td>${escapeHtml(t.TYPE || 'All')}</td>
+                <td>${escapeHtml(t.MODEL || 'All')}</td>
+                <td>${metricFormat(system)}</td>
+                <td>${metricFormat(adjust)}</td>
+                <td>${metricFormat(adjust > 0 ? adjust : system)}</td>
+              </tr>`;
+            }).join('') : '<tr><td colspan="6" class="empty">Belum ada target pada bulan ini.</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+    </section>`;
 
+  document.getElementById('targetForm').addEventListener('submit', async event => {
+    event.preventDefault();
+
+    const payload = {
+      month: document.getElementById('targetMonth').value,
+      storeCode: document.getElementById('targetStore').value,
+      type: document.getElementById('targetType').value,
+      model: document.getElementById('targetModel').value.trim(),
+      systemTarget: document.getElementById('systemTarget').value,
+      adjustTarget: document.getElementById('adjustTarget').value
+    };
+
+    try {
+      await api('saveTarget', payload);
+      showToast('Target berhasil disimpan.');
+      state.month = payload.month;
+      await loadTargets();
+      renderTargets();
+    } catch (error) {
+      showToast(error.message, true);
+    }
+  });
 }
 
 
-function renderTypeTable(){
+/* ======================================================
+   MASTER TYPE PAGE
+====================================================== */
 
-  const el =
-    document
-      .getElementById(
-        'typeTable'
-      );
+function renderMaster() {
+  document.getElementById('pageContent').innerHTML = `
+    ${pageHeader('Master Type', 'Atur daftar series yang tersedia')}
 
-  if(!types.length){
+    <section class="card">
+      <div class="card-title">Tambah Type / Series</div>
+      <form id="typeForm" style="display:flex;gap:10px;margin-top:16px">
+        <input id="newTypeName" required placeholder="Contoh: Watch Series">
+        <button class="btn btn-primary" type="submit">TAMBAH</button>
+      </form>
+    </section>
 
-    el.innerHTML =
-      '<div class="empty">Belum ada type.</div>';
+    <section class="card">
+      <div class="card-title">Type Aktif</div>
+      ${state.types.length ? `
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Type ID</th><th>Nama Type</th><th>Status</th></tr></thead>
+            <tbody>${state.types.map(t => `
+              <tr>
+                <td>${escapeHtml(t.TYPE_ID || '-')}</td>
+                <td>${escapeHtml(t.TYPE_NAME)}</td>
+                <td>${escapeHtml(t.STATUS || 'ACTIVE')}</td>
+              </tr>
+            `).join('')}</tbody>
+          </table>
+        </div>
+      ` : '<div class="empty">Belum ada type.</div>'}
+    </section>`;
 
-    return;
-  }
+  document.getElementById('typeForm').addEventListener('submit', async event => {
+    event.preventDefault();
+    const typeName = document.getElementById('newTypeName').value.trim();
 
-  el.innerHTML = `
-
-    <table>
-
-      <thead>
-
-        <tr>
-
-          <th>
-            TYPE ID
-          </th>
-
-          <th>
-            TYPE NAME
-          </th>
-
-          <th>
-            STATUS
-          </th>
-
-        </tr>
-
-      </thead>
-
-      <tbody>
-
-        ${types.map(t => `
-
-          <tr>
-
-            <td>
-              ${escapeHtml(t.TYPE_ID)}
-            </td>
-
-            <td>
-              <strong>
-                ${escapeHtml(t.TYPE_NAME)}
-              </strong>
-            </td>
-
-            <td>
-              <span class="badge">
-                ${escapeHtml(t.STATUS)}
-              </span>
-            </td>
-
-          </tr>
-
-        `).join('')}
-
-      </tbody>
-
-    </table>
-
-  `;
+    try {
+      await api('saveType', {typeName});
+      showToast('Type berhasil ditambahkan.');
+      await loadTypes();
+      renderMaster();
+    } catch (error) {
+      showToast(error.message, true);
+    }
+  });
 }
 
 
-async function saveType(){
+/* ======================================================
+   STARTUP
+====================================================== */
 
-  const name =
-    document
-      .getElementById(
-        'newTypeName'
-      )
-      .value
-      .trim();
-
-  if(!name){
-
-    alert(
-      'Nama type wajib diisi.'
-    );
-
-    return;
-  }
-
-  try{
-
-    await api(
-      'saveType',
-      {
-        typeName:name
-      }
-    );
-
-    alert(
-      'Type berhasil ditambahkan.'
-    );
-
-    document
-      .getElementById(
-        'newTypeName'
-      ).value = '';
-
-    await loadBaseData();
-
-    renderTypeTable();
-
-  }catch(err){
-
-    alert(
-      err.message
-    );
-  }
-}
-
-
-/* =================================================
-   FORMAT
-================================================= */
-
-function formatMoney(value){
-
-  return Number(
-    value || 0
-  ).toLocaleString(
-    'id-ID'
-  );
-}
-
-
-function formatCompact(value){
-
-  const n =
-    Number(value || 0);
-
-  if(
-    Math.abs(n) >= 1000000000
-  ){
-
-    return (
-      Math.round(
-        n / 10000000
-      ) / 100
-    ) + 'M';
-
-  }
-
-  if(
-    Math.abs(n) >= 1000000
-  ){
-
-    return (
-      Math.round(
-        n / 100000
-      ) / 10
-    ) + 'jt';
-
-  }
-
-  if(
-    Math.abs(n) >= 1000
-  ){
-
-    return (
-      Math.round(
-        n / 100
-      ) / 10
-    ) + 'rb';
-
-  }
-
-  return Math.round(n)
-    .toLocaleString('id-ID');
-}
-
-
-function formatPercent(value){
-
-  return (
-    Math.round(
-      Number(value || 0) * 10
-    ) / 10
-  ) + '%';
-}
-
-
-function achievementClass(value){
-
-  const n =
-    Number(value || 0);
-
-  if(n >= 100)
-    return 'achGreen';
-
-  if(n >= 90)
-    return 'achOrange';
-
-  return 'achRed';
-}
-
-
-function escapeHtml(value){
-
-  return String(
-    value ?? ''
-  )
-  .replaceAll('&','&amp;')
-  .replaceAll('<','&lt;')
-  .replaceAll('>','&gt;')
-  .replaceAll('"','&quot;')
-  .replaceAll("'","&#039;");
-}
-
+(function start() {
+  // Do not restore a cached token here. This avoids a stale
+  // browser session after Apps Script redeployment.
+  state.month = getCurrentMonth();
+  state.metric = 'QTY';
+})();
 </script>
-
 </body>
 </html>
